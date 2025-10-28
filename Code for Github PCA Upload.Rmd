@@ -1,0 +1,54 @@
+---
+title: "Independent"
+output: html_document
+date: "2025-06-24"
+---
+```{r}
+set.seed(101)
+library(amap)
+library(dplyr)
+library(PerformanceAnalytics)
+library(factoextra)
+library(gam)
+library(lares) 
+data<- "https://raw.githubusercontent.com/joaquimdesousa/Resume/refs/heads/main/train_modified_24mb_v2.csv"
+data<-read.csv(data)
+dim(data)
+str(data)
+head(data)
+data_clean<-data[,-c(1,2,3,4,6,7,14,19,23,26,28)]
+  str(data_clean)
+  lapply(data_clean,summary)
+  data_clean<-data_clean[data_clean$Age<=120&!data_clean$Age<0,]       #Removing values out of assumptions of lifespan of 0 to 120 years
+  length(data_clean$Age[data_clean$Age==0])/length(data_clean$Age)     #Check for needing removal of N/A values
+  data_clean<-na.omit(data_clean)                                           #removing N/A
+  length(data_clean$Age[data_clean$Age==0])/length(data_clean$Age)      #Check for cleaning out N/A
+  change_numeric<-names(data_clean[,c("Age","Annual_Income","Num_of_Loan","Num_of_Delayed_Payment","Changed_Credit_Limit","Outstanding_Debt","Amount_invested_monthly","Monthly_Balance")])
+  data_clean[change_numeric]<-lapply(data_clean[change_numeric],as.numeric)
+  data_clean$Credit_History_Age<-as.numeric(gsub(".*?([0-9]+).*","\\1",data_clean$Credit_History_Age))+as.numeric(sapply(strsplit(data_clean$Credit_History_Age, "\\D+"), `[`, 2))/12
+  length(na.omit(data_clean))
+  data_clean<-data_clean[!data_clean$Num_Bank_Accounts==-1,]
+  data_clean<-data_clean[!data_clean$Num_of_Loan==-100,]
+  data_clean<-na.omit(data_clean)
+pca_analysis<-acp(scale(data_clean))
+pca_analysis
+princomp(scale(data_clean)) # (double check to see the same pcs)
+pca_analysis$loadings
+pca_analysis$eig
+plot(pca_analysis,i=1,j=2,text=FALSE,label='Composants',variables=FALSE)
+plotAll(pca_analysis)
+plot.acp(pca_analysis,text=FALSE,variables=FALSE)
+cumsum(pca_analysis$sdev^2)/sum(pca_analysis$sdev^2)
+cumsum(pca_analysis$sdev^2)
+pca_analysis$sdev^2/sum(pca_analysis$sdev^2)
+screeplot(pca_analysis,type="lines")
+screeplot(pca_analysis,type="barplot",main="Barplot of Principal Component Analysis",xlab="Principal Components")
+abline(h=1,col="Blue")
+plot(pca_analysis$sdev^2, xlab = "Principle Component number", ylab = "Principle Component variance", type = "l", main = "Scree diagram")
+axis(1, at = c(1:21))
+abline(v=4,col="Blue")
+#biplot(pca_analysis)##Need to clean up to be presentable
+#pca_analysis$scores
+
+
+```
