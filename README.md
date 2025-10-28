@@ -5,6 +5,7 @@ OPTION 1
           It displays all code, results, and visualisations in a single, easy-to-read document — no setup required.
 
 =================================================================================================================
+
 OPTION 2
 
           Run the Rmd File in R/RStudio by downloading or cloning this repository.
