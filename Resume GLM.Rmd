@@ -15,9 +15,3 @@ final.fit <- stepAIC(birth.main, scope = list(lower = birth.min, upper = birth.m
 anova(final.fit, test = "Chisq")
 plot(final.fit)
 ```
-```{r}
-load("Workshop_4.RData")
-library(MASS)
-new.training <- training[, c(1:20, 134)]
-
-```
