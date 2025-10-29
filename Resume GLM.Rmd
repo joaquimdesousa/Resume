@@ -1,0 +1,23 @@
+```{r}
+library(MASS)
+data(birthwt)
+str(birthwt)
+birth.min <- glm(low ~ 1, family = binomial, data = birthwt)
+summary(birth.min)
+birth.max <- glm(low ~ age * lwt * factor(race) * smoke * ptl * ht * ui * ftv, family = binomial,
+    data = birthwt)
+summary(birth.max)
+birth.main <- glm(low ~ age + lwt + factor(race) + smoke + ptl + ht + ui + ftv, family = binomial,
+    data = birthwt)
+summary(birth.main)
+final.fit <- stepAIC(birth.main, scope = list(lower = birth.min, upper = birth.max),
+    direction = "both")
+anova(final.fit, test = "Chisq")
+plot(final.fit)
+```
+```{r}
+load("Workshop_4.RData")
+library(MASS)
+new.training <- training[, c(1:20, 134)]
+
+```
